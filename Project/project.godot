@@ -8,10 +8,26 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "KinematicBody2D",
+"class": "Character",
+"language": "GDScript",
+"path": "res://Source/Characters/Character.gd"
+}, {
+"base": "Character",
+"class": "Player",
+"language": "GDScript",
+"path": "res://Source/Characters/Player.gd"
+} ]
+_global_script_class_icons={
+"Character": "",
+"Player": ""
+}
+
 [application]
 
 config/name="CryptoBrawler"
-run/main_scene="res://Stages/BasicArena/BasicArena.tscn"
+run/main_scene="res://Source/Levels/BasicArena/BasicArena.tscn"
 
 [gui]
 

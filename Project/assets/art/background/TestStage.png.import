@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/TestStage.png-416703bd85ca3bbe683d23827b86f481.stex"
+path="res://.import/TestStage.png-7f0176527e07b5509fddb7d2b3f62d3a.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Stages/BasicArena/TestStage.png"
-dest_files=[ "res://.import/TestStage.png-416703bd85ca3bbe683d23827b86f481.stex" ]
+source_file="res://assets/art/background/TestStage.png"
+dest_files=[ "res://.import/TestStage.png-7f0176527e07b5509fddb7d2b3f62d3a.stex" ]
 
 [params]
 
