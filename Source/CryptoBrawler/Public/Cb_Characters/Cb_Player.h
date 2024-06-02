@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "PaperZDCharacter.h"
+#include "InputActionValue.h"
+#include "InputMappingContext.h"
 #include "Cb_Player.generated.h"
 
 
 class USpringArmComponent;
 class UCameraComponent;
-class UInputMappingContext;
-class UInputAction;
 class UInputComponent;
 struct FInputActionValue;
 class UCameraShakeBase;

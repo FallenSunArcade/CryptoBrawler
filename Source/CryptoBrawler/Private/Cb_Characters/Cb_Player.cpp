@@ -12,8 +12,6 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 
-class UEnhancedInputLocalPlayerSubsystem;
-
 ACb_Player::ACb_Player()
 {
 	PrimaryActorTick.bCanEverTick = false;
