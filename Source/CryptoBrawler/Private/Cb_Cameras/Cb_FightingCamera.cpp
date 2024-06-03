@@ -2,25 +2,38 @@
 
 
 #include "Cb_Cameras/Cb_FightingCamera.h"
+#include "Camera/CameraComponent.h"
 
 
-// Sets default values
 ACb_FightingCamera::ACb_FightingCamera()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
+
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	SetRootComponent(CameraComponent);
+
+	SetReplicates(true);
 }
 
-// Called when the game starts or when spawned
 void ACb_FightingCamera::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if(HasAuthority())
+	{
+		SetLocalPlayerViewTarget();
+	}
 }
 
-// Called every frame
-void ACb_FightingCamera::Tick(float DeltaTime)
+void ACb_FightingCamera::SetLocalPlayerViewTarget()
 {
-	Super::Tick(DeltaTime);
+	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		APlayerController* PC = Iterator->Get();
+		if (PC && PC->IsLocalController())
+		{
+			PC->SetViewTarget(this);
+		}
+	}
 }
 

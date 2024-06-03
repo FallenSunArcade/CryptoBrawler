@@ -6,20 +6,21 @@
 #include "GameFramework/Actor.h"
 #include "Cb_FightingCamera.generated.h"
 
+
+class UCameraComponent;
 UCLASS()
 class CRYPTOBRAWLER_API ACb_FightingCamera : public AActor
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	ACb_FightingCamera();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	void SetLocalPlayerViewTarget();
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	TObjectPtr<UCameraComponent> CameraComponent;
 };

@@ -9,8 +9,6 @@
 #include "Cb_Player.generated.h"
 
 
-class USpringArmComponent;
-class UCameraComponent;
 class UInputComponent;
 struct FInputActionValue;
 class UCameraShakeBase;
@@ -35,12 +33,6 @@ protected:
 	void Move(const FInputActionValue& Value);
 
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	USpringArmComponent* CameraBoom;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* FollowCamera;
-	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UCameraShakeBase> CameraShakeClass;
 	
