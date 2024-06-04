@@ -12,7 +12,7 @@ ACb_FightingCamera::ACb_FightingCamera()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	SetRootComponent(CameraComponent);
 
-	SetReplicates(true);
+	bReplicates = true;
 }
 
 void ACb_FightingCamera::BeginPlay()
