@@ -7,6 +7,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "PaperFlipbookComponent.h"
+#include "PaperZDAnimationComponent.h"
+#include "PaperZDAnimInstance.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
@@ -58,13 +60,14 @@ void ACb_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ACb_Player::Move);
+		EnhancedInputComponent->BindAction(PunchAction, ETriggerEvent::Triggered, this, &ACb_Player::Punch);
 	}
 }
 
 void ACb_Player::Move(const FInputActionValue& Value)
 {
 	float MovementValue = Value.Get<float>();
-
+	
 	if(GetCharacterMovement()->IsFalling())
 	{
 		return;
@@ -82,5 +85,19 @@ void ACb_Player::Move(const FInputActionValue& Value)
 
 	float Scale = FMath::Abs(MovementValue);
 	AddMovementInput(GetActorForwardVector(), Scale);
+}
+
+void ACb_Player::Punch(const FInputActionValue& Value)
+{
+	if(UPaperZDAnimationComponent* AnimationComponentRef = GetAnimationComponent())
+	{
+		if( UPaperZDAnimInstance* AnimInstanceRef = AnimationComponentRef->GetAnimInstance())
+		{
+			if(AnimSequence)
+			{
+				AnimInstanceRef->PlayAnimationOverride(AnimSequence);
+			}
+		}
+	}
 }
 

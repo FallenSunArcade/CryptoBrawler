@@ -12,6 +12,7 @@
 class UInputComponent;
 struct FInputActionValue;
 class UCameraShakeBase;
+class UPaperZDAnimSequence;
 
 
 UCLASS()
@@ -32,6 +33,8 @@ protected:
 	
 	void Move(const FInputActionValue& Value);
 
+	void Punch(const FInputActionValue& Value);
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UCameraShakeBase> CameraShakeClass;
@@ -44,4 +47,10 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* PunchAction;
+
+	UPROPERTY(EditAnywhere)
+	UPaperZDAnimSequence* AnimSequence;
 };
