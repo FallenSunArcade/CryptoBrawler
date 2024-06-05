@@ -7,7 +7,6 @@
 #include "Cb_PlayerController.generated.h"
 
 
-class UCb_HudOverlay;
 /**
  * 
  */
@@ -18,13 +17,4 @@ class CRYPTOBRAWLER_API ACb_PlayerController : public APlayerController
 
 protected:
 	virtual void BeginPlay() override;
-	
-	void CreateOverlay();
-
-private:
-	UPROPERTY(EditAnywhere, Category = "HUD")
-	TSubclassOf<UCb_HudOverlay> HudOverlayClass;
-
-	UPROPERTY(Transient)
-	TObjectPtr<UCb_HudOverlay> HudOverlayRef;
 };

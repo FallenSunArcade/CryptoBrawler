@@ -96,6 +96,7 @@ void ACb_Player::Punch(const FInputActionValue& Value)
 			if(AnimSequence)
 			{
 				AnimInstanceRef->PlayAnimationOverride(AnimSequence);
+				
 			}
 		}
 	}

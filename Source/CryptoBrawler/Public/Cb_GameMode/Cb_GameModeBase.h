@@ -7,6 +7,7 @@
 #include "Cb_GameModeBase.generated.h"
 
 
+class UCb_HudOverlay;
 /**
  * 
  */
@@ -18,5 +19,13 @@ class CRYPTOBRAWLER_API ACb_GameModeBase : public AGameModeBase
 protected:
 	virtual void BeginPlay() override;
 
+	void CreateOverlay();
+
+private:
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	TSubclassOf<UCb_HudOverlay> HudOverlayClass;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UCb_HudOverlay> HudOverlayRef;
 	
 };

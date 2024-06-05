@@ -13,6 +13,8 @@ class UInputComponent;
 struct FInputActionValue;
 class UCameraShakeBase;
 class UPaperZDAnimSequence;
+class UCb_CombatComponent;
+class UCb_VitalityComponent;
 
 
 UCLASS()
@@ -50,6 +52,12 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PunchAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = _Components, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UCb_CombatComponent> CombatComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = _Components, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UCb_VitalityComponent> VitalityComponent;
 
 	UPROPERTY(EditAnywhere)
 	UPaperZDAnimSequence* AnimSequence;
