@@ -21,6 +21,8 @@ protected:
 
 	void CreateOverlay();
 
+	virtual AActor* FindPlayerStart_Implementation(AController* Player, const FString& IncomingName) override;
+	
 private:
 	UPROPERTY(EditAnywhere, Category = "HUD")
 	TSubclassOf<UCb_HudOverlay> HudOverlayClass;

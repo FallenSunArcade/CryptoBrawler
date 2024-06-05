@@ -7,7 +7,7 @@
 void ACb_GameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	CreateOverlay();
 }
 
@@ -26,4 +26,9 @@ void ACb_GameModeBase::CreateOverlay()
 	{
 		UE_LOG(LogCb, Error, TEXT("[%s] HudOverlayClass not set"), *GetName());
 	}
+}
+
+AActor* ACb_GameModeBase::FindPlayerStart_Implementation(AController* Player, const FString& IncomingName)
+{
+	return Super::FindPlayerStart_Implementation(Player, "PlayerOne");
 }

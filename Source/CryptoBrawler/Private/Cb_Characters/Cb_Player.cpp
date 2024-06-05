@@ -9,6 +9,8 @@
 #include "PaperFlipbookComponent.h"
 #include "PaperZDAnimationComponent.h"
 #include "PaperZDAnimInstance.h"
+#include "Cb_Components/Cb_CombatComponent.h"
+#include "Cb_Components/Cb_VitalityComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
@@ -18,6 +20,11 @@ ACb_Player::ACb_Player()
 
 	GetCharacterMovement()->MaxWalkSpeed = 200.f;
 	GetCharacterMovement()->MaxAcceleration = 300.f;
+
+	CombatComponent = CreateDefaultSubobject<UCb_CombatComponent>(TEXT("Combat Component"));
+	CombatComponent->SetAnimationComponentRef(GetAnimationComponent());
+
+	VitalityComponent = CreateDefaultSubobject<UCb_VitalityComponent>("Vitality Component");
 }
 
 void ACb_Player::AddCameraShake(float Scale)
@@ -89,16 +96,9 @@ void ACb_Player::Move(const FInputActionValue& Value)
 
 void ACb_Player::Punch(const FInputActionValue& Value)
 {
-	if(UPaperZDAnimationComponent* AnimationComponentRef = GetAnimationComponent())
+	if(CombatComponent)
 	{
-		if( UPaperZDAnimInstance* AnimInstanceRef = AnimationComponentRef->GetAnimInstance())
-		{
-			if(AnimSequence)
-			{
-				AnimInstanceRef->PlayAnimationOverride(AnimSequence);
-				
-			}
-		}
+		CombatComponent->HandlePunch();
 	}
 }
 

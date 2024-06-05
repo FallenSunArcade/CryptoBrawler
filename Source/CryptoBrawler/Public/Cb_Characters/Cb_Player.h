@@ -57,8 +57,5 @@ private:
 	TObjectPtr<UCb_CombatComponent> CombatComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = _Components, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UCb_VitalityComponent> VitalityComponent;
-
-	UPROPERTY(EditAnywhere)
-	UPaperZDAnimSequence* AnimSequence;
+	TObjectPtr<UCb_VitalityComponent> VitalityComponent;;
 };
