@@ -8,6 +8,7 @@
 
 
 class UCb_HudOverlay;
+class APaperZDCharacter;
 /**
  * 
  */
@@ -16,6 +17,15 @@ class CRYPTOBRAWLER_API ACb_GameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
+public:
+	void ReadyPlayerOne(const TObjectPtr<APaperZDCharacter> PaperCharacter);
+	
+	// This is just spawning a bot right now
+	void SpawnPlayerTwo();
+
+	TObjectPtr<APaperZDCharacter> GetPlayerTwoRef() const { return PlayerTwoRef; }
+
+	
 protected:
 	virtual void BeginPlay() override;
 
@@ -29,5 +39,13 @@ private:
 
 	UPROPERTY(Transient)
 	TObjectPtr<UCb_HudOverlay> HudOverlayRef;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<APaperZDCharacter> BotClass;
 	
+	UPROPERTY(Transient)
+	TObjectPtr<APaperZDCharacter> PlayerOneRef;
+
+	UPROPERTY(Transient)
+	TObjectPtr<APaperZDCharacter> PlayerTwoRef;
 };

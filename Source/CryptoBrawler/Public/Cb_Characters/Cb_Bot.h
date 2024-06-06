@@ -6,23 +6,24 @@
 #include "PaperZDCharacter.h"
 #include "Cb_Bot.generated.h"
 
+
+class UCb_CombatComponent;
+class UCb_VitalityComponent;
+
 UCLASS()
 class CRYPTOBRAWLER_API ACb_Bot : public APaperZDCharacter
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	ACb_Bot();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = _Components)
+	TObjectPtr<UCb_CombatComponent> CombatComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = _Components)
+	TObjectPtr<UCb_VitalityComponent> VitalityComponent;;
 };

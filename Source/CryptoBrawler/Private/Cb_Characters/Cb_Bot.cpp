@@ -2,31 +2,28 @@
 
 
 #include "Cb_Characters/Cb_Bot.h"
+#include "Cb_Components/Cb_CombatComponent.h"
+#include "Cb_Components/Cb_VitalityComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
-// Sets default values
 ACb_Bot::ACb_Bot()
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
+	
+	GetCharacterMovement()->MaxWalkSpeed = 200.f;
+	GetCharacterMovement()->MaxAcceleration = 300.f;
+
+	CombatComponent = CreateDefaultSubobject<UCb_CombatComponent>(TEXT("Combat Component"));
+	CombatComponent->SetAnimationComponentRef(GetAnimationComponent());
+
+	VitalityComponent = CreateDefaultSubobject<UCb_VitalityComponent>("Vitality Component");
+	VitalityComponent->SetCapsuleComponentRef(GetCapsuleComponent());
+	
 }
 
-// Called when the game starts or when spawned
 void ACb_Bot::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
-
-// Called every frame
-void ACb_Bot::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
-// Called to bind functionality to input
-void ACb_Bot::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-

@@ -12,7 +12,6 @@
 class UInputComponent;
 struct FInputActionValue;
 class UCameraShakeBase;
-class UPaperZDAnimSequence;
 class UCb_CombatComponent;
 class UCb_VitalityComponent;
 
@@ -30,6 +29,8 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaSeconds) override;
 	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	
@@ -57,5 +58,8 @@ private:
 	TObjectPtr<UCb_CombatComponent> CombatComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = _Components, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UCb_VitalityComponent> VitalityComponent;;
+	TObjectPtr<UCb_VitalityComponent> VitalityComponent;
+
+	UPROPERTY(Transient)
+	TObjectPtr<APaperZDCharacter> PlayerTwoRef;
 };

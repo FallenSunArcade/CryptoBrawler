@@ -7,16 +7,15 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "PaperFlipbookComponent.h"
-#include "PaperZDAnimationComponent.h"
-#include "PaperZDAnimInstance.h"
 #include "Cb_Components/Cb_CombatComponent.h"
 #include "Cb_Components/Cb_VitalityComponent.h"
+#include "Cb_GameMode/Cb_GameModeBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
 ACb_Player::ACb_Player()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	GetCharacterMovement()->MaxWalkSpeed = 200.f;
 	GetCharacterMovement()->MaxAcceleration = 300.f;
@@ -25,6 +24,7 @@ ACb_Player::ACb_Player()
 	CombatComponent->SetAnimationComponentRef(GetAnimationComponent());
 
 	VitalityComponent = CreateDefaultSubobject<UCb_VitalityComponent>("Vitality Component");
+	VitalityComponent->SetCapsuleComponentRef(GetCapsuleComponent());
 }
 
 void ACb_Player::AddCameraShake(float Scale)
@@ -56,6 +56,16 @@ void ACb_Player::BeginPlay()
 	{
 		CameraManager->StartCameraFade(1.f, 0.f, 2.f, FLinearColor::Black);
 	}
+
+	if(ACb_GameModeBase* GameMode = Cast<ACb_GameModeBase>(UGameplayStatics::GetGameMode(GetWorld())))
+	{
+		GameMode->ReadyPlayerOne(this);
+	}
+}
+
+void ACb_Player::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
 }
 
 void ACb_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -79,19 +89,9 @@ void ACb_Player::Move(const FInputActionValue& Value)
 	{
 		return;
 	}
-	if(MovementValue < 0)
-	{
-		GetSprite()->SetWorldRotation({0.f, 180.f, 0.f});
-		SetActorRotation({0.f, 180.f, 0.f});
-	}
-	else
-	{
-		GetSprite()->SetWorldRotation({0.f, 0.f, 0.f});
-		SetActorRotation({0.f, 0.f, 0.f});
-	}
 
-	float Scale = FMath::Abs(MovementValue);
-	AddMovementInput(GetActorForwardVector(), Scale);
+	//float Scale = FMath::Abs(MovementValue);
+	AddMovementInput(GetActorForwardVector(), MovementValue);
 }
 
 void ACb_Player::Punch(const FInputActionValue& Value)
