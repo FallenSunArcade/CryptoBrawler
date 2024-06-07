@@ -5,3 +5,5 @@
 
 
 DEFINE_LOG_CATEGORY(LogCb);
+
+DEFINE_LOG_CATEGORY(LogCbCombat);

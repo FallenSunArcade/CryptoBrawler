@@ -10,6 +10,7 @@
 #include "Cb_Components/Cb_CombatComponent.h"
 #include "Cb_Components/Cb_VitalityComponent.h"
 #include "Cb_GameMode/Cb_GameModeBase.h"
+#include "Cb_ToolBox/Cb_CombatEnums.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
@@ -27,19 +28,6 @@ ACb_Player::ACb_Player()
 	
 	VitalityComponent = CreateDefaultSubobject<UCb_VitalityComponent>("Vitality Component");
 	VitalityComponent->SetCapsuleComponentRef(GetCapsuleComponent());
-}
-
-void ACb_Player::AddCameraShake(float Scale)
-{
-	if(*CameraShakeClass == nullptr)
-	{
-		return;
-	}
-	
-	if(APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0))
-	{
-		CameraManager->StartCameraShake(CameraShakeClass, Scale);
-	}
 }
 
 void ACb_Player::BeginPlay()
@@ -76,8 +64,8 @@ void ACb_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 	
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACb_Player::BeginJump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACb_Player::EndJump);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ACb_Player::Move);
 		EnhancedInputComponent->BindAction(PunchAction, ETriggerEvent::Triggered, this, &ACb_Player::Punch);
 	}
@@ -91,8 +79,26 @@ void ACb_Player::Move(const FInputActionValue& Value)
 	{
 		return;
 	}
-	
-	AddMovementInput(GetActorForwardVector(), MovementValue);
+
+	if(CombatComponent->GetCurrentSequence() == ESequenceName::None)
+	{
+		AddMovementInput(GetActorForwardVector(), MovementValue);
+	}
+	else
+	{
+		GetController()->StopMovement();
+	}
+
+}
+
+void ACb_Player::BeginJump(const FInputActionValue& Value)
+{
+	// Let State machine handle jumping
+	// Can still use Character classes built-in Jumps functions
+}
+
+void ACb_Player::EndJump(const FInputActionValue& Value)
+{
 }
 
 void ACb_Player::Punch(const FInputActionValue& Value)

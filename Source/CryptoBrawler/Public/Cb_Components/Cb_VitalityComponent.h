@@ -25,10 +25,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	UFUNCTION()
-	virtual void DamageTaken(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
-		AController* Instigator, AActor* DamageCauser);
-
 	UPROPERTY(Transient)
 	TObjectPtr<UCapsuleComponent> CapsuleComponentRef;
 };

@@ -4,13 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "PaperZDAnimInstance.h"
+#include "Cb_ToolBox/Cb_CombatEnums.h"
 #include "Components/ActorComponent.h"
 #include "Cb_CombatComponent.generated.h"
 
-enum class ESequenceName : uint8;
+
 class UPaperZDAnimationComponent;
 class UPaperZDAnimInstance;
 class UCb_CombatStateMachine;
+class UCb_CombatState;
+class UFMODEvent;
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -31,15 +34,25 @@ public:
 
 	void PlayCombatSequence(const ESequenceName& SequenceName);
 
+	void ChangeCurrentState(const ECombatState& State);
+
 	TObjectPtr<USceneComponent> GetStartUpperHitScene() const { return StartUpperBodyHit; }
 
 	TObjectPtr<USceneComponent> GetEndUpperHitScene() const { return EndUpperBodyHit; }
+
+	ESequenceName GetCurrentSequence() const { return CurrentSequence; }
 
 protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
 	void OnAnimationEnded(bool Completed);
+
+	UFUNCTION()
+	virtual void DamageTaken(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
+		AController* Instigator, AActor* DamageCauser);
+	
+	void AddCameraShake(float Scale);
 
 	UPROPERTY(EditAnywhere)
 	TMap<ESequenceName, UPaperZDAnimSequence*> CombatSequences;
@@ -52,9 +65,23 @@ protected:
 
 	FZDOnAnimationOverrideEndSignature AnimationOverrideEndDelegate;
 
-	UPROPERTY(EditAnywhere, Category = "Hit Detection", meta = (MakeEditWidget = true))
+	UPROPERTY(EditAnywhere, Category = "Hit Impact")
 	TObjectPtr<USceneComponent> StartUpperBodyHit;
 	
-	UPROPERTY(EditAnywhere, Category = "Hit Detection", meta = (MakeEditWidget = true))
+	UPROPERTY(EditAnywhere, Category = "Hit Impact")
 	TObjectPtr<USceneComponent> EndUpperBodyHit;
+
+	UPROPERTY(EditAnywhere, Category = "Hit Impact")
+	TSubclassOf<UCameraShakeBase> CameraShakeClass;
+
+	UPROPERTY(EditAnywhere, Category = "Hit Impact", BlueprintReadWrite)
+	TObjectPtr<UFMODEvent> HitImpactEvent;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UCb_CombatStateMachine> CombatStateMachine;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UCb_CombatState> CurrentState;
+
+	ESequenceName CurrentSequence;
 };

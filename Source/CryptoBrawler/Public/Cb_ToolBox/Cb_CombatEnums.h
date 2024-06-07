@@ -8,13 +8,15 @@
 UENUM(BlueprintType)
 enum class ECombatState : uint8
 {
-	Standing
+	Standing,
+	StandingPunch,
+	StandingKnockBack
 };
 
 UENUM(BlueprintType)
 enum class ESequenceName : uint8
 {
-	Default,
-	Punch,
-	KnockBack
+	None,
+	StandingPunch,
+	StandingKnockBack
 };

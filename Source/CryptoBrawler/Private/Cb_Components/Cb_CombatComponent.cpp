@@ -2,29 +2,43 @@
 
 
 #include "Cb_Components/Cb_CombatComponent.h"
+
+#include "FMODBlueprintStatics.h"
 #include "PaperZDAnimationComponent.h"
+#include "Cb_CombatStateMachine/Cb_CombatState.h"
+#include "Cb_CombatStateMachine/Cb_CombatStateMachine.h"
 #include "Cb_ToolBox/Cb_CombatEnums.h"
 #include "Cb_ToolBox/Cb_LogCategories.h"
 #include "Engine/DamageEvents.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 
 UCb_CombatComponent::UCb_CombatComponent()
 {
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 	AnimationOverrideEndDelegate.BindUObject(this, &UCb_CombatComponent::OnAnimationEnded);
 
 	StartUpperBodyHit = CreateDefaultSubobject<USceneComponent>("Start Upper Body Hit");
 	EndUpperBodyHit = CreateDefaultSubobject<USceneComponent>("End Upper Body Hit");
+
+	CurrentSequence = ESequenceName::None;
 }
 
 void UCb_CombatComponent::HandlePunch()
 {
-	PlayCombatSequence(ESequenceName::Punch);
+	if(CurrentState)
+	{
+		CurrentState->Punch(this);
+	}
 }
 
 void UCb_CombatComponent::HandleKnockBack()
 {
+	if(CurrentState)
+	{
+		CurrentState->KnockBack(this);
+	}
 }
 
 void UCb_CombatComponent::HandleUpperBodyHitDetection()
@@ -67,8 +81,22 @@ void UCb_CombatComponent::PlayCombatSequence(const ESequenceName& SequenceName)
 	
 	if(CombatSequences.Find(SequenceName))
 	{
-		AnimInstanceRef->PlayAnimationOverride(CombatSequences[SequenceName],
-			"DefaultSlot", 1, 0, AnimationOverrideEndDelegate);
+		if(AnimInstanceRef->PlayAnimationOverride(CombatSequences[SequenceName],
+			"DefaultSlot", 1, 0, AnimationOverrideEndDelegate))
+		{
+			CurrentSequence = SequenceName;
+		}
+	}
+}
+
+void UCb_CombatComponent::ChangeCurrentState(const ECombatState& State)
+{
+	UE_LOG(LogCbCombat, Display, TEXT("[%s] ChangeCurrentState <%s>"), *GetName(), *UEnum::GetValueAsString(State));
+	CurrentState = CombatStateMachine->ChangeState(State);
+
+	if(CurrentState)
+	{
+		CurrentState->EnterState(this);
 	}
 }
 
@@ -76,14 +104,60 @@ void UCb_CombatComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	CombatStateMachine = NewObject<UCb_CombatStateMachine>();
+	CombatStateMachine->GenerateStates();
+	
+	CurrentState = CombatStateMachine->ChangeState(ECombatState::Standing);
+	
 	if(AnimationComponentRef)
 	{
 		AnimInstanceRef = AnimationComponentRef->GetAnimInstance();
+	}
+
+	if(GetOwner())
+	{
+		GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UCb_CombatComponent::DamageTaken);
 	}
 }
 
 void UCb_CombatComponent::OnAnimationEnded(bool Completed)
 {
 	UE_LOG(LogCb, Display, TEXT("[%s] OnAnimationEnded %d"), *GetName(), Completed);
+	
+	if(CurrentState)
+	{
+		CurrentState->SequenceEnded(this, CurrentSequence);
+	}
+
+	CurrentSequence = ESequenceName::None;
+}
+
+void UCb_CombatComponent::DamageTaken(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
+	AController* Instigator, AActor* DamageCauser)
+{
+	if(DamagedActor)
+	{
+		UE_LOG(LogCb, Display, TEXT("[%s] DamageActor %s"), *GetName(), *DamagedActor->GetName());
+
+		if(HitImpactEvent) // Make this a method the state machine can call
+		{
+			UFMODBlueprintStatics::PlayEventAtLocation(GetWorld(), HitImpactEvent, GetOwner()->GetActorTransform(), true);
+		}
+
+		AddCameraShake(1.f);
+		
+		HandleKnockBack();
+	}
+}
+
+void UCb_CombatComponent::AddCameraShake(float Scale)
+{
+	if(APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0))
+	{
+		if(*CameraShakeClass)
+		{
+			CameraManager->StartCameraShake(CameraShakeClass, Scale);
+		}
+	}
 }
 
