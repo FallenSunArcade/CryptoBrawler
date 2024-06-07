@@ -22,7 +22,9 @@ ACb_Player::ACb_Player()
 
 	CombatComponent = CreateDefaultSubobject<UCb_CombatComponent>(TEXT("Combat Component"));
 	CombatComponent->SetAnimationComponentRef(GetAnimationComponent());
-
+	CombatComponent->GetStartUpperHitScene()->SetupAttachment(GetRootComponent());
+	CombatComponent->GetEndUpperHitScene()->SetupAttachment(GetRootComponent());
+	
 	VitalityComponent = CreateDefaultSubobject<UCb_VitalityComponent>("Vitality Component");
 	VitalityComponent->SetCapsuleComponentRef(GetCapsuleComponent());
 }
@@ -89,8 +91,7 @@ void ACb_Player::Move(const FInputActionValue& Value)
 	{
 		return;
 	}
-
-	//float Scale = FMath::Abs(MovementValue);
+	
 	AddMovementInput(GetActorForwardVector(), MovementValue);
 }
 

@@ -5,12 +5,17 @@
 #include "PaperZDAnimationComponent.h"
 #include "Cb_ToolBox/Cb_CombatEnums.h"
 #include "Cb_ToolBox/Cb_LogCategories.h"
+#include "Engine/DamageEvents.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 UCb_CombatComponent::UCb_CombatComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	AnimationOverrideEndDelegate.BindUObject(this, &UCb_CombatComponent::OnAnimationEnded);
+
+	StartUpperBodyHit = CreateDefaultSubobject<USceneComponent>("Start Upper Body Hit");
+	EndUpperBodyHit = CreateDefaultSubobject<USceneComponent>("End Upper Body Hit");
 }
 
 void UCb_CombatComponent::HandlePunch()
@@ -20,6 +25,34 @@ void UCb_CombatComponent::HandlePunch()
 
 void UCb_CombatComponent::HandleKnockBack()
 {
+}
+
+void UCb_CombatComponent::HandleUpperBodyHitDetection()
+{
+	TArray<AActor*> ActorsToIgnore;
+	ActorsToIgnore.Add(GetOwner());
+	FHitResult BoxHit;
+
+	if (UKismetSystemLibrary::BoxTraceSingle(
+		this,
+		StartUpperBodyHit->GetComponentLocation(),
+		EndUpperBodyHit->GetComponentLocation(),
+		FVector(12.f, 8.f, 20.f),
+		StartUpperBodyHit->GetComponentRotation(),
+		UEngineTypes::ConvertToTraceType(ECC_GameTraceChannel3),
+		false,
+		ActorsToIgnore,
+		EDrawDebugTrace::None,
+		BoxHit,
+		true
+	))
+	{
+		FPointDamageEvent DamageEvent;
+		DamageEvent.Damage = 10.f;
+		DamageEvent.HitInfo = BoxHit;
+
+		BoxHit.GetActor()->TakeDamage(10.f, DamageEvent, nullptr, GetOwner());
+	}
 }
 
 void UCb_CombatComponent::PlayCombatSequence(const ESequenceName& SequenceName)

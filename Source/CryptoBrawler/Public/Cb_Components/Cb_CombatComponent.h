@@ -27,7 +27,13 @@ public:
 
 	void HandleKnockBack();
 
+	void HandleUpperBodyHitDetection();
+
 	void PlayCombatSequence(const ESequenceName& SequenceName);
+
+	TObjectPtr<USceneComponent> GetStartUpperHitScene() const { return StartUpperBodyHit; }
+
+	TObjectPtr<USceneComponent> GetEndUpperHitScene() const { return EndUpperBodyHit; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -45,4 +51,10 @@ protected:
 	TObjectPtr<UPaperZDAnimInstance> AnimInstanceRef;
 
 	FZDOnAnimationOverrideEndSignature AnimationOverrideEndDelegate;
+
+	UPROPERTY(EditAnywhere, Category = "Hit Detection", meta = (MakeEditWidget = true))
+	TObjectPtr<USceneComponent> StartUpperBodyHit;
+	
+	UPROPERTY(EditAnywhere, Category = "Hit Detection", meta = (MakeEditWidget = true))
+	TObjectPtr<USceneComponent> EndUpperBodyHit;
 };
