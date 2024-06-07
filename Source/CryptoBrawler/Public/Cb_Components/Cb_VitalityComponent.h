@@ -49,4 +49,7 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Vitality", meta = (ClampMin = 1.f))
 	float MaxEnergy = 100.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsAlive = true;
 };

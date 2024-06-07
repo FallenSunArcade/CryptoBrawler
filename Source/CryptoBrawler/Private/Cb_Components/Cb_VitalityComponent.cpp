@@ -18,11 +18,11 @@ void UCb_VitalityComponent::UpdateHealth(float Delta)
 	if(CurrentHealth == 0)
 	{
 		DeadDelegate.Broadcast();
+		bIsAlive = false;
 	}
-	else
-	{
-		UpdateHealthDelegate.Broadcast(CurrentHealth / MaxHealth);
-	}
+
+	UpdateHealthDelegate.Broadcast(CurrentHealth / MaxHealth);
+	
 }
 
 void UCb_VitalityComponent::BeginPlay()
