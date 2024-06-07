@@ -9,6 +9,7 @@
 #include "Cb_CombatComponent.generated.h"
 
 
+class UCb_VitalityComponent;
 class UPaperZDAnimationComponent;
 class UPaperZDAnimInstance;
 class UCb_CombatStateMachine;
@@ -24,11 +25,13 @@ class CRYPTOBRAWLER_API UCb_CombatComponent : public UActorComponent
 public:
 	UCb_CombatComponent();
 
-	void SetAnimationComponentRef(UPaperZDAnimationComponent* AnimationComponent) { AnimationComponentRef = AnimationComponent; };
+	void SetAnimationComponentRef(UPaperZDAnimationComponent* AnimationComponent) { AnimationComponentRef = AnimationComponent; }
 
+	void SetVitalityRef(UCb_VitalityComponent* VitalityComponent) { VitalityComponentRef = VitalityComponent; }
+	
 	void HandlePunch();
 
-	void HandleKnockBack();
+	void HandleKnockBack();	
 
 	void HandleUpperBodyHitDetection();
 
@@ -56,6 +59,9 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TMap<ESequenceName, UPaperZDAnimSequence*> CombatSequences;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UCb_VitalityComponent> VitalityComponentRef;
 
 	UPROPERTY(Transient)
 	TObjectPtr<UPaperZDAnimationComponent> AnimationComponentRef;

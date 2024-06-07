@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "Cb_GameMode/Cb_GameModeBase.h"
-
 #include "EngineUtils.h"
 #include "PaperFlipbookComponent.h"
 #include "Cb_Characters/Cb_Bot.h"

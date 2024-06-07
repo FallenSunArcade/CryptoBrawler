@@ -7,6 +7,7 @@
 #include "PaperZDAnimationComponent.h"
 #include "Cb_CombatStateMachine/Cb_CombatState.h"
 #include "Cb_CombatStateMachine/Cb_CombatStateMachine.h"
+#include "Cb_Components/Cb_VitalityComponent.h"
 #include "Cb_ToolBox/Cb_CombatEnums.h"
 #include "Cb_ToolBox/Cb_LogCategories.h"
 #include "Engine/DamageEvents.h"
@@ -147,6 +148,11 @@ void UCb_CombatComponent::DamageTaken(AActor* DamagedActor, float Damage, const 
 		AddCameraShake(1.f);
 		
 		HandleKnockBack();
+
+		if(VitalityComponentRef)
+		{
+			VitalityComponentRef->UpdateHealth(20.f);
+		}
 	}
 }
 

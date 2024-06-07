@@ -23,6 +23,8 @@ public:
 	// This is just spawning a bot right now
 	void SpawnPlayerTwo();
 
+	TObjectPtr<APaperZDCharacter> GetPlayerOneRef() const { return PlayerOneRef; }
+	
 	TObjectPtr<APaperZDCharacter> GetPlayerTwoRef() const { return PlayerTwoRef; }
 
 	

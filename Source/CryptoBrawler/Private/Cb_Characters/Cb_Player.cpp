@@ -28,6 +28,8 @@ ACb_Player::ACb_Player()
 	
 	VitalityComponent = CreateDefaultSubobject<UCb_VitalityComponent>("Vitality Component");
 	VitalityComponent->SetCapsuleComponentRef(GetCapsuleComponent());
+
+	CombatComponent->SetVitalityRef(VitalityComponent);
 }
 
 void ACb_Player::BeginPlay()
