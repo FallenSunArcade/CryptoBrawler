@@ -153,7 +153,7 @@ void UCb_CombatComponent::DamageTaken(AActor* DamagedActor, float Damage, const 
 
 		if(VitalityComponentRef)
 		{
-			VitalityComponentRef->UpdateHealth(20.f);
+			VitalityComponentRef->UpdateHealth(10.f);
 		}
 	}
 }
