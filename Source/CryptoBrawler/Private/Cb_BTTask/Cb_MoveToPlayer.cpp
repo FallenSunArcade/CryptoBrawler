@@ -16,7 +16,9 @@
  EBTNodeResult::Type UCb_MoveToPlayer::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
  {
 	Super::ExecuteTask(OwnerComp, NodeMemory);
-	
+
+ 	BTComponent = OwnerComp;
+ 	
 	const AAIController* AIController = OwnerComp.GetAIOwner();
  	
 	if (!AIController)
@@ -25,19 +27,47 @@
 		return EBTNodeResult::Failed;
 	}
 
-	ACb_Bot* Character = Cast<ACb_Bot>(AIController->GetPawn());
-	if (!Character)
+	BotRef = Cast<ACb_Bot>(AIController->GetPawn());
+	if (!BotRef)
 	{
-		UE_LOG(LogCbAI, Warning, TEXT("[%s] Character is %p"), *GetName(), Character);
+		UE_LOG(LogCbAI, Warning, TEXT("[%s] Character is %p"), *GetName(), BotRef.Get());
 		return EBTNodeResult::Failed;
 	}
 
-	Character->MoveToPlayer(AcceptableDistance);
+ 	if(bIsMoveAway)
+ 	{
+ 		BotRef->MoveAwayFromPlayer(AcceptableDistance);
+ 	}
+    else
+    {
+    	BotRef->MoveToPlayer(AcceptableDistance);
+    }
 
-	return EBTNodeResult::Succeeded;
+ 	BotRef->OnReachedDestination.AddDynamic(this, &UCb_MoveToPlayer::OnDestinationReached);
+
+	return EBTNodeResult::InProgress;
  }
 
  EBTNodeResult::Type UCb_MoveToPlayer::AbortTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
  {
-  return Super::AbortTask(OwnerComp, NodeMemory);
+ 	CleanUp();
+ 	return EBTNodeResult::Aborted;
+ }
+
+ void UCb_MoveToPlayer::OnDestinationReached(bool DestinationReached)
+ {
+ 	if (BTComponent)
+ 	{
+ 		UE_LOG(LogCbAI, Display, TEXT("[%s] OnDestinationReached"), *GetName());
+ 		CleanUp();
+ 		FinishLatentTask(*BTComponent, EBTNodeResult::Succeeded);
+ 	}
+ }
+
+ void UCb_MoveToPlayer::CleanUp()
+ {
+ 	if(BotRef)
+ 	{
+ 		BotRef->OnReachedDestination.RemoveDynamic(this, &UCb_MoveToPlayer::OnDestinationReached);
+ 	}
  }

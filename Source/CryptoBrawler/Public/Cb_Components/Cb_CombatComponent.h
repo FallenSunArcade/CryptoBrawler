@@ -9,6 +9,8 @@
 #include "Cb_CombatComponent.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCombatMontageEnded);
+
 class UCb_VitalityComponent;
 class UPaperZDAnimationComponent;
 class UPaperZDAnimInstance;
@@ -44,6 +46,8 @@ public:
 	TObjectPtr<USceneComponent> GetEndUpperHitScene() const { return EndUpperBodyHit; }
 
 	ESequenceName GetCurrentSequence() const { return CurrentSequence; }
+
+	FOnCombatMontageEnded OnCombatMontageEnded;
 
 protected:
 	virtual void BeginPlay() override;

@@ -4,20 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
-#include "Cb_MoveToPlayer.generated.h"
+#include "Cb_UseStandingAttack.generated.h"
 
-
-class ACb_Bot;
+class UCb_CombatComponent;
 /**
- * This will move the bot class to the player
+ * 
  */
 UCLASS()
-class CRYPTOBRAWLER_API UCb_MoveToPlayer : public UBTTask_BlackboardBase
+class CRYPTOBRAWLER_API UCb_UseStandingAttack : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 
 public:
-	UCb_MoveToPlayer();
+	UCb_UseStandingAttack();
 
 protected:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
@@ -25,20 +24,14 @@ protected:
 	virtual EBTNodeResult::Type AbortTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
 	UFUNCTION()
-	void OnDestinationReached(bool DestinationReached);
+	void OnCombatSequenceEnded();
 	
 	void CleanUp();
 
 private:
-	UPROPERTY(EditAnywhere)
-	float AcceptableDistance = 20.f;
-
-	UPROPERTY(EditAnywhere)
-	bool bIsMoveAway = false;
-
 	UPROPERTY(Transient)
 	TObjectPtr<UBehaviorTreeComponent> BTComponent;
 	
 	UPROPERTY(Transient)
-	TObjectPtr<ACb_Bot> BotRef;
+	TObjectPtr<UCb_CombatComponent> CombatComponentRef;
 };

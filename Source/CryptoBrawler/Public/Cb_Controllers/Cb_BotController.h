@@ -7,7 +7,15 @@
 #include "Cb_BotController.generated.h"
 
 
+UENUM(BlueprintType)
+enum class EBotState : uint8
+{
+	Defending,
+	Attacking
+ };
+
 class UBehaviorTree;
+
 UCLASS()
 class CRYPTOBRAWLER_API ACb_BotController : public AAIController
 {
@@ -16,10 +24,21 @@ class CRYPTOBRAWLER_API ACb_BotController : public AAIController
 public:
 	ACb_BotController();
 
+	void SetBotState(const EBotState& State);
+
 protected:
 	virtual void BeginPlay() override;
+
+	void HandleSwitchState();
+
+	void GenerateRandomSwitchTimer();
 	
 private:
 	UPROPERTY(EditAnywhere, Category = "Behavior Tree")
 	TObjectPtr<UBehaviorTree> CurrentBehaviorTree;
+
+	FTimerHandle RandomSwitchStateHandle;
+
+	EBotState CurrentState;
 };
+

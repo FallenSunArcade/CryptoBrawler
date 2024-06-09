@@ -34,6 +34,11 @@ protected:
 	void CreateOverlay();
 
 	virtual AActor* FindPlayerStart_Implementation(AController* Player, const FString& IncomingName) override;
+
+	UFUNCTION()
+	void PlayerDead();
+
+	void ResetMatch();
 	
 private:
 	UPROPERTY(EditAnywhere, Category = "HUD")
@@ -50,4 +55,6 @@ private:
 
 	UPROPERTY(Transient)
 	TObjectPtr<APaperZDCharacter> PlayerTwoRef;
+
+	FTimerHandle ResetMatchTimerHandle;
 };

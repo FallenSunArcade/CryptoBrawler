@@ -124,6 +124,8 @@ void UCb_CombatComponent::BeginPlay()
 void UCb_CombatComponent::OnAnimationEnded(bool Completed)
 {
 	UE_LOG(LogCb, Display, TEXT("[%s] OnAnimationEnded %d"), *GetName(), Completed);
+
+	OnCombatMontageEnded.Broadcast();
 	
 	if(CurrentState)
 	{

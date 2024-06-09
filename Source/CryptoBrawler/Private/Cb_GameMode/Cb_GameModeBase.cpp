@@ -3,9 +3,11 @@
 #include "EngineUtils.h"
 #include "PaperFlipbookComponent.h"
 #include "Cb_Characters/Cb_Bot.h"
+#include "Cb_Components/Cb_VitalityComponent.h"
 #include "Cb_ToolBox/Cb_LogCategories.h"
 #include "Cb_UI/Cb_HudOverlay.h"
 #include "GameFramework/PlayerStart.h"
+#include "Kismet/GameplayStatics.h"
 
 
 void ACb_GameModeBase::BeginPlay()
@@ -14,6 +16,14 @@ void ACb_GameModeBase::BeginPlay()
 
 	CreateOverlay();
 	SpawnPlayerTwo();
+
+	if(PlayerTwoRef)
+	{
+		if(UCb_VitalityComponent* VitalityComponent = PlayerTwoRef->GetComponentByClass<UCb_VitalityComponent>())
+		{
+			VitalityComponent->DeadDelegate.AddDynamic(this, &ACb_GameModeBase::PlayerDead);
+		}
+	}
 }
 
 void ACb_GameModeBase::CreateOverlay()
@@ -42,6 +52,11 @@ void ACb_GameModeBase::ReadyPlayerOne(const TObjectPtr<APaperZDCharacter> PaperC
 		if(PlayerOneRef)
 		{
 			PlayerOneRef->SetActorTransform(PlayerSpawnPoint->GetActorTransform());
+			
+			if(UCb_VitalityComponent* VitalityComponent = PlayerOneRef->GetComponentByClass<UCb_VitalityComponent>())
+			{
+				VitalityComponent->DeadDelegate.AddDynamic(this, &ACb_GameModeBase::PlayerDead);
+			}
 		}
 	}
 }
@@ -77,4 +92,19 @@ AActor* ACb_GameModeBase::FindPlayerStart_Implementation(AController* Player, co
 	}
 
 	return Super::FindPlayerStart_Implementation(Player, IncomingName);
+}
+
+void ACb_GameModeBase::PlayerDead()
+{
+	
+	GetWorldTimerManager().SetTimer(
+		ResetMatchTimerHandle,
+		this,
+		&ACb_GameModeBase::ResetMatch,
+		3.f);
+}
+
+void ACb_GameModeBase::ResetMatch()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), TEXT("TestMap"));
 }
