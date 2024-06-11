@@ -7,6 +7,7 @@
 #include "Cb_CombatState.generated.h"
 
 
+enum class ECombatMode : uint8;
 enum class ESequenceName : uint8;
 class UCb_CombatComponent;
 /**
@@ -25,6 +26,14 @@ public:
 	virtual void SequenceEnded(TObjectPtr<UCb_CombatComponent> CombatComponent, const ESequenceName& SequenceName);
 
 	virtual void Punch(TObjectPtr<UCb_CombatComponent> CombatComponent);
+	
+	virtual void Kick(TObjectPtr<UCb_CombatComponent> CombatComponent);
 
 	virtual void KnockBack(TObjectPtr<UCb_CombatComponent> CombatComponent);
+
+	virtual void EnterCombatMode(TObjectPtr<UCb_CombatComponent> CombatComponent, const ECombatMode& CombatMode);
+
+	virtual bool CanMove();
 };
+
+

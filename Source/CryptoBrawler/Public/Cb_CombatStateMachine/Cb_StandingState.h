@@ -19,5 +19,13 @@ public:
 
 	virtual void Punch(TObjectPtr<UCb_CombatComponent> CombatComponent) override;
 
+	virtual void Kick(TObjectPtr<UCb_CombatComponent> CombatComponent) override;
+
 	virtual void KnockBack(TObjectPtr<UCb_CombatComponent> CombatComponent) override;
+
+	virtual void EnterCombatMode(TObjectPtr<UCb_CombatComponent> CombatComponent, const ECombatMode& CombatMode) override;
+
+	virtual bool CanMove() override;
 };
+
+

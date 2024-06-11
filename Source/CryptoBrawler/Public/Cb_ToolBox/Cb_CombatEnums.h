@@ -6,11 +6,22 @@
 
 
 UENUM(BlueprintType)
+enum class ECombatMode : uint8
+{
+	Standing,
+	StandingBlock,
+	Crouching,
+	CrouchingBlock
+};
+
+UENUM(BlueprintType)
 enum class ECombatState : uint8
 {
 	Standing,
 	StandingPunch,
-	StandingKnockBack
+	StandingKnockBack,
+	StandingKick,
+	StandingBlock
 };
 
 UENUM(BlueprintType)
@@ -18,5 +29,6 @@ enum class ESequenceName : uint8
 {
 	None,
 	StandingPunch,
-	StandingKnockBack
+	StandingKnockBack,
+	StandingKick
 };

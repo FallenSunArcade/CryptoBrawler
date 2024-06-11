@@ -70,6 +70,9 @@ void ACb_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACb_Player::EndJump);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ACb_Player::Move);
 		EnhancedInputComponent->BindAction(PunchAction, ETriggerEvent::Triggered, this, &ACb_Player::Punch);
+		EnhancedInputComponent->BindAction(KickAction, ETriggerEvent::Triggered, this, &ACb_Player::Kick);
+		EnhancedInputComponent->BindAction(StartBlockAction, ETriggerEvent::Triggered, this, &ACb_Player::StartBlock);
+		EnhancedInputComponent->BindAction(EndBlockAction, ETriggerEvent::Triggered, this, &ACb_Player::EndBlock);
 	}
 }
 
@@ -108,6 +111,30 @@ void ACb_Player::Punch(const FInputActionValue& Value)
 	if(CombatComponent)
 	{
 		CombatComponent->HandlePunch();
+	}
+}
+
+void ACb_Player::Kick(const FInputActionValue& Value)
+{
+	if(CombatComponent)
+	{
+		CombatComponent->HandleKick();
+	}
+}
+
+void ACb_Player::StartBlock(const FInputActionValue& Value)
+{
+	if(CombatComponent)
+	{
+		CombatComponent->HandleEnterCombatMode(ECombatMode::StandingBlock);
+	}
+}
+
+void ACb_Player::EndBlock(const FInputActionValue& Value)
+{
+	if(CombatComponent)
+	{
+		CombatComponent->HandleEnterCombatMode(ECombatMode::Standing);
 	}
 }
 

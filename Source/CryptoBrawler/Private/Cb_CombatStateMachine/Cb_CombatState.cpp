@@ -25,7 +25,23 @@ void UCb_CombatState::Punch(TObjectPtr<UCb_CombatComponent> CombatComponent)
 	UE_LOG(LogCbCombat, Display, TEXT("[%s] Punch"), *GetName());
 }
 
+void UCb_CombatState::Kick(TObjectPtr<UCb_CombatComponent> CombatComponent)
+{
+	UE_LOG(LogCbCombat, Display, TEXT("[%s] Kick"), *GetName());
+}
+
 void UCb_CombatState::KnockBack(TObjectPtr<UCb_CombatComponent> CombatComponent)
 {
 	UE_LOG(LogCbCombat, Display, TEXT("[%s] KnockBack"), *GetName());
+}
+
+void UCb_CombatState::EnterCombatMode(TObjectPtr<UCb_CombatComponent> CombatComponent,
+                                      const ECombatMode& CombatMode)
+{
+	UE_LOG(LogCbCombat, Display, TEXT("[%s] EnterCombatMode (%s)"), *GetName(), *UEnum::GetValueAsString(CombatMode));
+}
+
+bool UCb_CombatState::CanMove()
+{
+	return false;
 }

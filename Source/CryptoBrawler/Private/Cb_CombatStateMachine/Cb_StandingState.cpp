@@ -8,24 +8,43 @@
 void UCb_StandingState::EnterState(TObjectPtr<UCb_CombatComponent> CombatComponent)
 {
 	Super::EnterState(CombatComponent);
+	
+	CombatComponent->SetCurrentCombatMode(ECombatMode::Standing);
 }
 
 void UCb_StandingState::Punch(TObjectPtr<UCb_CombatComponent> CombatComponent)
 {
 	Super::Punch(CombatComponent);
+	
+	CombatComponent->ChangeCurrentState(ECombatState::StandingPunch);
+}
 
-	if(CombatComponent)
-	{
-		CombatComponent->ChangeCurrentState(ECombatState::StandingPunch);
-	}
+void UCb_StandingState::Kick(TObjectPtr<UCb_CombatComponent> CombatComponent)
+{
+	Super::Kick(CombatComponent);
+	
+	CombatComponent->ChangeCurrentState(ECombatState::StandingKick);
 }
 
 void UCb_StandingState::KnockBack(TObjectPtr<UCb_CombatComponent> CombatComponent)
 {
 	Super::KnockBack(CombatComponent);
+	
+	CombatComponent->ChangeCurrentState(ECombatState::StandingKnockBack);
+}
 
-	if(CombatComponent)
+void UCb_StandingState::EnterCombatMode(TObjectPtr<UCb_CombatComponent> CombatComponent,
+	const ECombatMode& CombatMode)
+{
+	Super::EnterCombatMode(CombatComponent, CombatMode);
+
+	if(CombatMode == ECombatMode::StandingBlock)
 	{
-		CombatComponent->ChangeCurrentState(ECombatState::StandingKnockBack);
+		CombatComponent->ChangeCurrentState(ECombatState::StandingBlock);
 	}
+}
+
+bool UCb_StandingState::CanMove()
+{
+	return true;
 }

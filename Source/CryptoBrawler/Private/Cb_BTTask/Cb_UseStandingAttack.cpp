@@ -49,7 +49,15 @@ EBTNodeResult::Type UCb_UseStandingAttack::ExecuteTask(UBehaviorTreeComponent& O
 
 				if(DistanceToPlayer < 160.f)
 				{
-					CombatComponentRef->HandlePunch();
+					if(FMath::RandBool())
+					{
+						CombatComponentRef->HandlePunch();
+					}
+					else
+					{
+						CombatComponentRef->HandleKick();
+					}
+		
 					CombatComponentRef->OnCombatMontageEnded.AddDynamic(this, &UCb_UseStandingAttack::OnCombatSequenceEnded);
 					return EBTNodeResult::InProgress;
 				}

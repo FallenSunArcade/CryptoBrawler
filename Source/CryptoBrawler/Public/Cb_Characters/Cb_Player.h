@@ -11,7 +11,6 @@
 
 class UInputComponent;
 struct FInputActionValue;
-class UCameraShakeBase;
 class UCb_CombatComponent;
 class UCb_VitalityComponent;
 
@@ -39,6 +38,12 @@ protected:
 
 	void Punch(const FInputActionValue& Value);
 
+	void Kick(const FInputActionValue& Value);
+
+	void StartBlock(const FInputActionValue& Value);
+	
+	void EndBlock(const FInputActionValue& Value);
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
@@ -51,6 +56,15 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* PunchAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* KickAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* StartBlockAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* EndBlockAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = _Components, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCb_CombatComponent> CombatComponent;

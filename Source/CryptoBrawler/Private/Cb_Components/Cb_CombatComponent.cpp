@@ -1,8 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Cb_Components/Cb_CombatComponent.h"
-
 #include "FMODBlueprintStatics.h"
 #include "PaperZDAnimationComponent.h"
 #include "Cb_CombatStateMachine/Cb_CombatState.h"
@@ -24,6 +21,7 @@ UCb_CombatComponent::UCb_CombatComponent()
 	EndUpperBodyHit = CreateDefaultSubobject<USceneComponent>("End Upper Body Hit");
 
 	CurrentSequence = ESequenceName::None;
+	CurrentMode = ECombatMode::Standing;
 }
 
 void UCb_CombatComponent::HandlePunch()
@@ -31,6 +29,14 @@ void UCb_CombatComponent::HandlePunch()
 	if(CurrentState)
 	{
 		CurrentState->Punch(this);
+	}
+}
+
+void UCb_CombatComponent::HandleKick()
+{
+	if(CurrentState)
+	{
+		CurrentState->Kick(this);
 	}
 }
 
@@ -67,6 +73,14 @@ void UCb_CombatComponent::HandleUpperBodyHitDetection()
 		DamageEvent.HitInfo = BoxHit;
 
 		BoxHit.GetActor()->TakeDamage(10.f, DamageEvent, nullptr, GetOwner());
+	}
+}
+
+void UCb_CombatComponent::HandleEnterCombatMode(const ECombatMode& CombatMode)
+{
+	if(CurrentState)
+	{
+		CurrentState->EnterCombatMode(this, CombatMode);
 	}
 }
 
@@ -121,6 +135,17 @@ void UCb_CombatComponent::BeginPlay()
 	}
 }
 
+void UCb_CombatComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+	FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if(CurrentSequence == ESequenceName::StandingKnockBack)
+	{
+		GetOwner()->AddActorLocalOffset({-200.f * DeltaTime, 0.f, 0.f});
+	}
+}
+
 void UCb_CombatComponent::OnAnimationEnded(bool Completed)
 {
 	UE_LOG(LogCb, Display, TEXT("[%s] OnAnimationEnded %d"), *GetName(), Completed);
@@ -142,18 +167,36 @@ void UCb_CombatComponent::DamageTaken(AActor* DamagedActor, float Damage, const 
 	{
 		UE_LOG(LogCb, Display, TEXT("[%s] DamageActor %s"), *GetName(), *DamagedActor->GetName());
 
-		if(HitImpactEvent) // Make this a method the state machine can call
+		if(CurrentMode == ECombatMode::StandingBlock)
 		{
-			UFMODBlueprintStatics::PlayEventAtLocation(GetWorld(), HitImpactEvent, GetOwner()->GetActorTransform(), true);
+			if (BlockImpactEvent) // Make this a method the state machine can call
+			{
+				UFMODBlueprintStatics::PlayEventAtLocation(GetWorld(), BlockImpactEvent, GetOwner()->GetActorTransform(),
+														   true);
+			}
+			AddCameraShake(.5f);
+
+			if(VitalityComponentRef)
+			{
+				VitalityComponentRef->UpdateHealth(2.f);
+			}
 		}
-
-		AddCameraShake(1.f);
-		
-		HandleKnockBack();
-
-		if(VitalityComponentRef)
+		else
 		{
-			VitalityComponentRef->UpdateHealth(10.f);
+			if (HitImpactEvent) // Make this a method the state machine can call
+			{
+				UFMODBlueprintStatics::PlayEventAtLocation(GetWorld(), HitImpactEvent, GetOwner()->GetActorTransform(),
+				                                           true);
+			}
+			
+			AddCameraShake(1.f);
+		
+			HandleKnockBack();
+
+			if(VitalityComponentRef)
+			{
+				VitalityComponentRef->UpdateHealth(10.f);
+			}
 		}
 	}
 }

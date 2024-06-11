@@ -2,6 +2,9 @@
 
 
 #include "Cb_CombatStateMachine/Cb_CombatStateMachine.h"
+
+#include "Cb_CombatStateMachine/Cb_StandingBlockState.h"
+#include "Cb_CombatStateMachine/Cb_StandingKickState.h"
 #include "Cb_CombatStateMachine/Cb_StandingKnockBackState.h"
 #include "Cb_CombatStateMachine/Cb_StandingPunchState.h"
 #include "Cb_CombatStateMachine/Cb_StandingState.h"
@@ -16,6 +19,8 @@ void UCb_CombatStateMachine::GenerateStates()
 		StateMap.Emplace(ECombatState::Standing, NewObject<UCb_StandingState>());
 		StateMap.Emplace(ECombatState::StandingPunch, NewObject<UCb_StandingPunchState>());
 		StateMap.Emplace(ECombatState::StandingKnockBack, NewObject<UCb_StandingKnockBackState>());
+		StateMap.Emplace(ECombatState::StandingKick, NewObject<UCb_StandingKickState>());
+		StateMap.Emplace(ECombatState::StandingBlock, NewObject<UCb_StandingBlockState>());
 	}
 }
 

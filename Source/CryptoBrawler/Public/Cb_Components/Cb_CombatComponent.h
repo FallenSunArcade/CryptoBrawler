@@ -33,9 +33,13 @@ public:
 	
 	void HandlePunch();
 
+	void HandleKick();
+
 	void HandleKnockBack();	
 
 	void HandleUpperBodyHitDetection();
+
+	void HandleEnterCombatMode(const ECombatMode& CombatMode);
 
 	void PlayCombatSequence(const ESequenceName& SequenceName);
 
@@ -44,14 +48,18 @@ public:
 	TObjectPtr<USceneComponent> GetStartUpperHitScene() const { return StartUpperBodyHit; }
 
 	TObjectPtr<USceneComponent> GetEndUpperHitScene() const { return EndUpperBodyHit; }
-
+	
 	ESequenceName GetCurrentSequence() const { return CurrentSequence; }
+
+	void SetCurrentCombatMode(const ECombatMode& CombatMode) { CurrentMode = CombatMode; }
 
 	FOnCombatMontageEnded OnCombatMontageEnded;
 
 protected:
 	virtual void BeginPlay() override;
 
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
 	UFUNCTION()
 	void OnAnimationEnded(bool Completed);
 
@@ -86,6 +94,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Hit Impact", BlueprintReadWrite)
 	TObjectPtr<UFMODEvent> HitImpactEvent;
+	
+	UPROPERTY(EditAnywhere, Category = "Hit Impact", BlueprintReadWrite)
+	TObjectPtr<UFMODEvent> BlockImpactEvent;
 
 	UPROPERTY(Transient)
 	TObjectPtr<UCb_CombatStateMachine> CombatStateMachine;
@@ -94,4 +105,7 @@ protected:
 	TObjectPtr<UCb_CombatState> CurrentState;
 
 	ESequenceName CurrentSequence;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	ECombatMode CurrentMode;
 };
