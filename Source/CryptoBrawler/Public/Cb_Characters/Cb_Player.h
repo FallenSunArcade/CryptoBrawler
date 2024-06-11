@@ -66,10 +66,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* EndBlockAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = _Components, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = _Components, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCb_CombatComponent> CombatComponent;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = _Components, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = _Components, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCb_VitalityComponent> VitalityComponent;
 
 	UPROPERTY(Transient)
