@@ -53,6 +53,8 @@ public:
 
 	void SetCurrentCombatMode(const ECombatMode& CombatMode) { CurrentMode = CombatMode; }
 
+	ECombatMode GetCurrentCombatMode() const { return CurrentMode; }
+
 	FOnCombatMontageEnded OnCombatMontageEnded;
 
 protected:

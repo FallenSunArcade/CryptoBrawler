@@ -80,7 +80,7 @@ void ACb_Player::Move(const FInputActionValue& Value)
 {
 	float MovementValue = Value.Get<float>();
 	
-	if(GetCharacterMovement()->IsFalling())
+	if(GetCharacterMovement()->IsFalling() || CombatComponent->GetCurrentCombatMode() == ECombatMode::StandingBlock)
 	{
 		return;
 	}
